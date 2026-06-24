@@ -21,6 +21,9 @@ fetch("data/clients.json")
 
     activeClient = client;
 
+    renderHeroSummary(client);
+    renderHeroServices(client.services || []);
+
     document.getElementById("account").innerText =
       "Лицевой счет: " + client.account;
 
@@ -36,6 +39,7 @@ fetch("data/clients.json")
     renderServices(client.services || []);
     renderTimeline(client.events || [], client);
     setupMailButton(client);
+    setupStackedSections();
   })
   .catch(error => {
     console.error(error);
@@ -52,6 +56,68 @@ function parseMoney(value) {
     .replace(/[^\d.-]/g, "");
 
   return Number(normalized) || 0;
+}
+
+
+function paymentUrlFor(client) {
+  const account = encodeURIComponent(client.account || "");
+  return `https://lkfl.atomsbt.ru/lk_auth/pay.php?account=${account}&ls=${account}`;
+}
+
+function renderHeroSummary(client) {
+  const stageTitles = {
+    1: "Передача показаний",
+    2: "Формирование и доставка квитанции",
+    3: "Оплата",
+    4: "Задолженность / пени"
+  };
+
+  const currentStage = Number(client.currentStage || 1);
+  const hasDebt = parseMoney(client.debt) > 0;
+  const hasPenalty = parseMoney(client.penalty) > 0;
+  const latest = (client.debtHistory || []).slice(-1)[0] || {};
+
+  const heroStage = document.getElementById("heroStage");
+  const heroAction = document.getElementById("heroAction");
+  const heroReading = document.getElementById("heroReading");
+  const heroPayment = document.getElementById("heroPayment");
+  const heroPayButton = document.getElementById("heroPayButton");
+
+  if (heroStage) {
+    heroStage.textContent = stageTitles[currentStage] || "Проверка данных";
+  }
+
+  if (heroReading) {
+    const readingDate = latest.readingDate && latest.readingDate !== "—" ? latest.readingDate : "не переданы";
+    heroReading.textContent = latest.readingMethod && latest.readingMethod !== "показания не передавались"
+      ? `${readingDate}, ${latest.readingMethod}`
+      : "показания не переданы";
+  }
+
+  if (heroPayment) {
+    if (latest.paymentDate && latest.paymentDate !== "—") {
+      heroPayment.textContent = `${latest.paymentDate}, ${latest.paymentAmount || latest.paid || ""}`;
+    } else {
+      heroPayment.textContent = "оплата не поступила";
+    }
+  }
+
+  if (heroAction) {
+    if (client.restriction && client.restriction.active) {
+      const service = client.restriction.serviceLabel || client.restriction.service || "услуга";
+      heroAction.textContent = `Есть риск ограничения: ${service}. Проверьте задолженность и оплатите.`;
+    } else if (hasDebt || hasPenalty) {
+      heroAction.textContent = `Есть задолженность ${client.debt}${hasPenalty ? ` и пени ${client.penalty}` : ""}. Посмотрите, как она образовалась.`;
+    } else if (latest.readingMethod === "показания не передавались") {
+      heroAction.textContent = "Показания не переданы. Проверьте начисление и передайте фактические данные.";
+    } else {
+      heroAction.textContent = "Задолженности нет. Проверьте начисления и историю оплаты.";
+    }
+  }
+
+  if (heroPayButton) {
+    heroPayButton.href = paymentUrlFor(client);
+  }
 }
 
 function getHistoryItems(client, year) {
@@ -254,6 +320,39 @@ function getServiceImage(name) {
   return "images/services/default.png";
 }
 
+function renderHeroServices(services) {
+  const root = document.getElementById("heroServices");
+  if (!root) return;
+
+  if (!services.length) {
+    root.innerHTML = '<div class="hero-service-empty">Нет данных по услугам</div>';
+    return;
+  }
+
+  root.innerHTML = services.map(service => {
+    const subtitle = service.method || service.note || "";
+    const debtEndClass = parseMoney(service.debtEnd) > 0 ? "warning-value" : "";
+    return `
+      <div class="hero-service-item">
+        <div class="hero-service-main">
+          <img class="hero-service-icon" src="${getServiceImage(service.name)}" alt="${service.name}">
+          <div class="hero-service-text">
+            <div class="hero-service-name">${service.name}</div>
+            ${subtitle ? `<div class="hero-service-subtitle">${subtitle}</div>` : ""}
+          </div>
+        </div>
+
+        <div class="hero-service-finance">
+          <div><span>Долг на начало</span><b>${service.debtStart || "0 ₽"}</b></div>
+          <div><span>Начисление</span><b>${service.charge || service.amount || "0 ₽"}</b></div>
+          <div><span>Оплата</span><b>${service.paid || "0 ₽"}</b></div>
+          <div><span>Долг на конец</span><b class="${debtEndClass}">${service.debtEnd || "0 ₽"}</b></div>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
 function renderServices(services) {
   const root = document.getElementById("servicesBreakdown");
   if (!root) return;
@@ -339,11 +438,15 @@ function renderTimeline(events, client) {
 
 function renderRestriction(client) {
   const block = document.getElementById("restrictionBlock");
+  const stack = document.getElementById("restrictionStack");
 
   if (!client.restriction || !client.restriction.active) {
-    block.innerHTML = "";
+    if (block) block.innerHTML = "";
+    if (stack) stack.hidden = true;
     return;
   }
+
+  if (stack) stack.hidden = false;
 
   const resource = client.restriction.serviceLabel || client.restriction.service || "услуга";
   const plannedDate = client.restriction.plannedDate || "не указана";
@@ -358,6 +461,41 @@ function renderRestriction(client) {
       <p><b>Что сделать:</b> оплатить задолженность или обратиться в центр обслуживания.</p>
     </section>
   `;
+}
+
+
+function setupStackedSections() {
+  const sections = Array.from(document.querySelectorAll("[data-stack]"));
+
+  sections.forEach(section => {
+    const button = section.querySelector(".stacked-header");
+    const content = section.querySelector(".stacked-content");
+    if (!button || !content || button.dataset.bound === "true") return;
+
+    button.dataset.bound = "true";
+    button.setAttribute("aria-expanded", section.classList.contains("is-open") ? "true" : "false");
+
+    button.addEventListener("click", () => {
+      const isOpen = section.classList.contains("is-open");
+
+      sections.forEach(other => {
+        if (other !== section) {
+          other.classList.remove("is-open");
+          const otherButton = other.querySelector(".stacked-header");
+          if (otherButton) otherButton.setAttribute("aria-expanded", "false");
+        }
+      });
+
+      section.classList.toggle("is-open", !isOpen);
+      button.setAttribute("aria-expanded", !isOpen ? "true" : "false");
+
+      if (!isOpen) {
+        setTimeout(() => {
+          section.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 80);
+      }
+    });
+  });
 }
 
 function setupMailButton(client) {

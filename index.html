@@ -7,175 +7,260 @@
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-  <main class="page">
-    <section class="demo-nav" aria-label="Демо-сценарии">
+  <main class="page page-compact">
+    <section class="demo-nav compact-demo-nav" aria-label="Демо-сценарии">
       <div class="demo-title">Демо-сценарии</div>
-      <a href="?client=1001">✅ ЕПД оплачен</a>
-      <a href="?client=1002">⏰ Нет показаний</a>
-      <a href="?client=1003">❗ Долг из прошлого месяца</a>
-      <a href="?client=1004">🚫 Долг за несколько месяцев</a>
-      <a href="?client=1005">🔄 Поздние показания и перерасчёт</a>
+      <a href="?client=1001">1001</a>
+      <a href="?client=1002">1002</a>
+      <a href="?client=1003">1003</a>
+      <a href="?client=1004">1004</a>
+      <a href="?client=1005">1005</a>
     </section>
 
-    <header class="hero">
+    <header class="hero hero-dashboard">
       <div class="brand-row">
         <img class="brand-logo-full" src="images/rosatom-logo-white-full.png" alt="Росатом Энергосбыт" />
       </div>
-      <h1>Так понятнее</h1>
-      <p>Ваша квитанция простым языком</p>
-      <div id="account" class="account">Загрузка...</div>
+      <div class="hero-title-row">
+        <div>
+          <h1>Так понятнее</h1>
+          <p>Ваша квитанция простым языком</p>
+        </div>
+        <div id="account" class="account">Загрузка...</div>
+      </div>
+
+      <div class="first-screen-grid">
+        <div class="summary-card">
+          <span>К оплате</span>
+          <strong id="amount">-</strong>
+        </div>
+        <div class="summary-card">
+          <span>Задолженность</span>
+          <strong id="debt">-</strong>
+        </div>
+        <div class="summary-card">
+          <span>Пени</span>
+          <strong id="penalty">-</strong>
+        </div>
+      </div>
+
+      <section class="hero-important" aria-label="Самое важное">
+        <div class="important-main">
+          <span>Сейчас важно</span>
+          <strong id="heroAction">Загрузка...</strong>
+        </div>
+        <div class="important-details">
+          <div>
+            <span>Этап</span>
+            <b id="heroStage">Загрузка...</b>
+          </div>
+          <div>
+            <span>Показания</span>
+            <b id="heroReading">Загрузка...</b>
+          </div>
+          <div>
+            <span>Оплата</span>
+            <b id="heroPayment">Загрузка...</b>
+          </div>
+        </div>
+        <a id="heroPayButton" class="hero-pay-button" href="https://lkfl.atomsbt.ru/lk_auth/pay.php" target="_blank" rel="noopener">Перейти к оплате</a>
+      </section>
+
+      <section class="hero-services-panel" aria-label="Что входит в текущий ЕПД">
+        <div class="hero-services-panel-title">По услугам в текущем ЕПД</div>
+        <div id="heroServices" class="hero-services">Загрузка...</div>
+      </section>
     </header>
 
-    <section class="month-map">
-      <h2>Как устроен месяц</h2>
-      <p id="currentStageHint" class="month-stage-hint">Загрузка этапа...</p>
-      <div class="month-line">
-        <div class="month-step month-step-1" data-stage="1">
-          <div class="dot">1</div>
-          <strong>20–25 число</strong>
-          <span>Передать показания</span>
+    <section class="section-stack" aria-label="Подробности квитанции">
+      <section class="stacked-section" data-stack>
+        <button class="stacked-header" type="button">
+          <span class="stack-number">1</span>
+          <span class="stack-title"><strong>Как устроен месяц</strong><small>этапы: показания, квитанция, оплата</small></span>
+          <span class="stack-plus">+</span>
+        </button>
+        <div class="stacked-content">
+          <p id="currentStageHint" class="month-stage-hint">Загрузка этапа...</p>
+          <div class="month-line">
+            <div class="month-step month-step-1" data-stage="1">
+              <div class="dot">1</div>
+              <strong>20–25 число</strong>
+              <span>Передать показания</span>
+            </div>
+            <div class="month-connector" aria-hidden="true"></div>
+            <div class="month-step month-step-2" data-stage="2">
+              <div class="dot">2</div>
+              <strong>Формирование</strong>
+              <span>и доставка квитанции</span>
+            </div>
+            <div class="month-connector" aria-hidden="true"></div>
+            <div class="month-step month-step-3" data-stage="3">
+              <div class="dot">3</div>
+              <strong>1–15 число</strong>
+              <span>Оплата</span>
+            </div>
+            <div class="month-connector danger" aria-hidden="true"></div>
+            <div class="month-step month-step-4" data-stage="4">
+              <div class="dot danger-dot">!</div>
+              <strong>После 15 числа</strong>
+              <span>Долг / пени</span>
+            </div>
+          </div>
         </div>
-        <div class="month-connector" aria-hidden="true"></div>
-        <div class="month-step month-step-2" data-stage="2">
-          <div class="dot">2</div>
-          <strong>Формирование</strong>
-          <span>и доставка квитанции</span>
+      </section>
+
+      <section class="stacked-section debt-section" data-stack>
+        <button class="stacked-header" type="button">
+          <span class="stack-number">2</span>
+          <span class="stack-title"><strong id="debtSectionTitle">Как образовалась задолженность</strong><small>по месяцам: начислено, оплачено, осталось</small></span>
+          <span class="stack-plus">+</span>
+        </button>
+        <div class="stacked-content">
+          <p class="section-subtitle">Здесь видно, по какому месяцу и на какую сумму образовалась задолженность. Начисления и оплаты показаны рядом с суммами, чтобы сразу было понятно, где возникла недоплата.</p>
+          <div id="debtHistory" class="debt-history"></div>
         </div>
-        <div class="month-connector" aria-hidden="true"></div>
-        <div class="month-step month-step-3" data-stage="3">
-          <div class="dot">3</div>
-          <strong>1–15 число</strong>
-          <span>Оплата</span>
+      </section>
+
+      <section class="stacked-section history-section" data-stack>
+        <button class="stacked-header" type="button">
+          <span class="stack-number">3</span>
+          <span class="stack-title"><strong>История передачи показаний</strong><small>когда, каким способом и на какой месяц учтены</small></span>
+          <span class="stack-plus">+</span>
+        </button>
+        <div class="stacked-content">
+          <p class="section-subtitle">Нажмите на месяц, чтобы увидеть, когда и каким способом были переданы показания, какие именно данные Вы передали и на какой месяц они были учтены.</p>
+          <div id="readingYearLinks" class="history-year-links"></div>
+          <div id="readingHistory" class="accordion-list"></div>
         </div>
-        <div class="month-connector danger" aria-hidden="true"></div>
-        <div class="month-step month-step-4" data-stage="4">
-          <div class="dot danger-dot">!</div>
-          <strong>После 15 числа</strong>
-          <span>Долг / пени</span>
+      </section>
+
+      <section class="stacked-section history-section" data-stack>
+        <button class="stacked-header" type="button">
+          <span class="stack-number">4</span>
+          <span class="stack-title"><strong>История оплаты</strong><small>когда, сколько и за какой месяц учтено</small></span>
+          <span class="stack-plus">+</span>
+        </button>
+        <div class="stacked-content">
+          <p class="section-subtitle">Здесь видно, когда и каким способом Вы оплатили, какую сумму Вы внесли и за какой месяц платёж был учтён.</p>
+          <div id="paymentYearLinks" class="history-year-links"></div>
+          <div id="paymentHistory" class="accordion-list"></div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <section class="summary">
-      <div class="summary-card">
-        <span>К оплате</span>
-        <strong id="amount">-</strong>
-      </div>
-      <div class="summary-card">
-        <span>Долг</span>
-        <strong id="debt">-</strong>
-      </div>
-      <div class="summary-card">
-        <span>Пени</span>
-        <strong id="penalty">-</strong>
-      </div>
-    </section>
+      <section id="restrictionStack" class="stacked-section restriction-stack" data-stack hidden>
+        <button class="stacked-header danger-header" type="button">
+          <span class="stack-number">!</span>
+          <span class="stack-title"><strong>Ограничение услуги</strong><small>дата, причина и что сделать</small></span>
+          <span class="stack-plus">+</span>
+        </button>
+        <div class="stacked-content" id="restrictionBlock"></div>
+      </section>
 
+      <section class="stacked-section services-section" data-stack>
+        <button class="stacked-header" type="button">
+          <span class="stack-number">5</span>
+          <span class="stack-title"><strong>Что входит в ЕПД</strong><small>услуги, начисления, объём и тариф</small></span>
+          <span class="stack-plus">+</span>
+        </button>
+        <div class="stacked-content">
+          <p class="section-subtitle">Единый платёжный документ объединяет несколько услуг. Здесь они показаны отдельно и простым языком.</p>
+          <div id="servicesBreakdown" class="services-grid"></div>
+        </div>
+      </section>
 
+      <section class="stacked-section" data-stack>
+        <button class="stacked-header" type="button">
+          <span class="stack-number">6</span>
+          <span class="stack-title"><strong>Что произошло по Вашей квитанции</strong><small>события по датам</small></span>
+          <span class="stack-plus">+</span>
+        </button>
+        <div class="stacked-content">
+          <p class="section-subtitle">Все события показаны по датам: показания, начисления, оплата и ограничения.</p>
+          <div id="timeline" class="timeline"></div>
+        </div>
+      </section>
 
-    <section class="section debt-section">
-      <h2 id="debtSectionTitle">Как образовалась задолженность</h2>
-      <p class="section-subtitle">Здесь видно, по какому месяцу и на какую сумму образовалась задолженность. Начисления и оплаты показаны рядом с суммами, чтобы сразу было понятно, где возникла недоплата.</p>
-      <div id="debtHistory" class="debt-history"></div>
-    </section>
+      <section class="stacked-section actions-combined-section" data-stack>
+        <button class="stacked-header" type="button">
+          <span class="stack-number">7</span>
+          <span class="stack-title"><strong>Действия и помощь</strong><small>ЦОК, передача показаний и приложение</small></span>
+          <span class="stack-plus">+</span>
+        </button>
+        <div class="stacked-content combined-actions-content">
+          <div class="action-block help-block">
+            <img class="action-illustration" src="images/icons/payment-cash.png" alt="Центр обслуживания клиентов" />
+            <div class="action-content">
+              <h2>Нужна помощь?</h2>
+              <p>Если после просмотра квитанции остались вопросы — выберите удобный способ связи.</p>
+              <a class="main-button" href="tel:+74712390329">Позвонить в ЦОК</a>
+              <a class="secondary-button help-button" href="mailto:secretary@kursk.atomsbt.ru?subject=Вопрос%20по%20квитанции">Написать на e-mail</a>
+            </div>
+          </div>
 
+          <div class="action-block mail-block">
+            <img class="action-illustration" src="images/icons/email.png" alt="Передача показаний по e-mail" />
+            <div class="action-content">
+              <h2>Передать показания по e-mail</h2>
+              <p>Сначала введите показания. После этого нажмите кнопку — откроется готовое письмо для отправки.</p>
+              <form id="readingsForm" class="readings-form">
+                <label>
+                  Электроснабжение
+                  <input id="readingElectricity" type="text" inputmode="numeric" placeholder="например, 18382" />
+                </label>
+                <label>
+                  Холодная вода
+                  <input id="readingColdWater" type="text" inputmode="numeric" placeholder="например, 219" />
+                </label>
+                <label>
+                  Горячая вода
+                  <input id="readingHotWater" type="text" inputmode="numeric" placeholder="например, 162" />
+                </label>
+                <label>
+                  Дата передачи
+                  <input id="readingDate" type="date" />
+                </label>
+                <button id="mailButton" class="main-button" type="button">Сформировать письмо</button>
+              </form>
+            </div>
+          </div>
 
+          <div class="action-block app-block">
+            <img class="action-illustration" src="images/icons/payment-app.png" alt="Мобильное приложение" />
+            <div class="action-content">
+              <h2>Удобнее в приложении</h2>
+              <p>Этот сервис — мост между бумажной квитанцией и мобильным приложением.</p>
+              <a class="main-button" href="https://play.google.com/store/apps/details?id=ru.atomsbt.mobile" target="_blank" rel="noopener">Скачать для Android</a>
+              <a class="secondary-button help-button" href="https://apps.apple.com/ru/app/id1446753122" target="_blank" rel="noopener">Скачать для iPhone</a>
+            </div>
+          </div>
+        </div>
+      </section>
 
-    <section class="section history-section">
-      <h2>История передачи показаний</h2>
-      <p class="section-subtitle">Нажмите на месяц, чтобы увидеть, когда и каким способом были переданы показания, какие именно данные Вы передали и на какой месяц они были учтены.</p>
-      <div id="readingYearLinks" class="history-year-links"></div>
-      <div id="readingHistory" class="accordion-list"></div>
-    </section>
-
-    <section class="section history-section">
-      <h2>История оплаты</h2>
-      <p class="section-subtitle">Здесь видно, когда и каким способом Вы оплатили, какую сумму Вы внесли и за какой месяц платёж был учтён.</p>
-      <div id="paymentYearLinks" class="history-year-links"></div>
-      <div id="paymentHistory" class="accordion-list"></div>
-    </section>
-
-    <section id="restrictionBlock"></section>
-
-    <section class="section services-section">
-      <h2>Что входит в ЕПД</h2>
-      <p class="section-subtitle">Единый платёжный документ объединяет несколько услуг. Здесь они показаны отдельно и простым языком.</p>
-      <div id="servicesBreakdown" class="services-grid"></div>
-    </section>
-
-    <section class="section">
-      <h2>Что произошло по Вашей квитанции</h2>
-      <p class="section-subtitle">
-        Все события показаны по датам: показания, начисления, оплата и ограничения.
-      </p>
-      <div id="timeline" class="timeline"></div>
-    </section>
-
-    <section class="faq-block">
-      <h2>Частые вопросы</h2>
-      <details>
-        <summary>Почему начислили по среднему или нормативу?</summary>
-        <p>Показания не были переданы с 20 по 25 число. Передайте фактические показания в следующем периоде — сумма будет скорректирована.</p>
-      </details>
-      <details>
-        <summary>Почему появились пени?</summary>
-        <p>Оплата не поступила до 15 числа месяца, следующего за расчётным.</p>
-      </details>
-      <details>
-        <summary>Почему долг остался, если я оплатил текущий месяц?</summary>
-        <p>Платёж мог закрыть только один месяц, а задолженность могла тянуться из предыдущего периода. В блоке «Как образовалась задолженность» видно, в каком месяце появилась недоплата.</p>
-      </details>
-      <details>
-        <summary>Что делать при ограничении ресурса?</summary>
-        <p>Необходимо погасить задолженность. После поступления оплаты подача ресурса будет восстановлена.</p>
-      </details>
-    </section>
-
-    <section class="action-block help-block">
-      <img class="action-illustration" src="images/icons/payment-cash.png" alt="Центр обслуживания клиентов" />
-      <div class="action-content">
-        <h2>Нужна помощь?</h2>
-        <p>Если после просмотра квитанции остались вопросы — выберите удобный способ связи.</p>
-        <a class="main-button" href="tel:+74712390329">Позвонить в ЦОК</a>
-        <a class="secondary-button help-button" href="mailto:secretary@kursk.atomsbt.ru?subject=Вопрос%20по%20квитанции">Написать на e-mail</a>
-      </div>
-    </section>
-
-    <section class="action-block mail-block">
-      <img class="action-illustration" src="images/icons/email.png" alt="Передача показаний по e-mail" />
-      <div class="action-content">
-        <h2>Передать показания по e-mail</h2>
-        <p>Сначала введите показания. После этого нажмите кнопку — откроется готовое письмо для отправки.</p>
-        <form id="readingsForm" class="readings-form">
-          <label>
-            Электроснабжение
-            <input id="readingElectricity" type="text" inputmode="numeric" placeholder="например, 18382" />
-          </label>
-          <label>
-            Холодная вода
-            <input id="readingColdWater" type="text" inputmode="numeric" placeholder="например, 219" />
-          </label>
-          <label>
-            Горячая вода
-            <input id="readingHotWater" type="text" inputmode="numeric" placeholder="например, 162" />
-          </label>
-          <label>
-            Дата передачи
-            <input id="readingDate" type="date" />
-          </label>
-          <button id="mailButton" class="main-button" type="button">Сформировать письмо</button>
-        </form>
-      </div>
-    </section>
-
-    <section class="action-block app-block">
-      <img class="action-illustration" src="images/icons/payment-app.png" alt="Мобильное приложение" />
-      <div class="action-content">
-        <h2>Удобнее в приложении</h2>
-        <p>Этот сервис — мост между бумажной квитанцией и мобильным приложением.</p>
-        <a class="main-button" href="https://play.google.com/store/apps/details?id=ru.atomsbt.mobile" target="_blank" rel="noopener">Скачать для Android</a>
-        <a class="secondary-button help-button" href="https://apps.apple.com/ru/app/id1446753122" target="_blank" rel="noopener">Скачать для iPhone</a>
-      </div>
+      <section class="stacked-section faq-block" data-stack>
+        <button class="stacked-header" type="button">
+          <span class="stack-number">?</span>
+          <span class="stack-title"><strong>Частые вопросы</strong><small>короткие объяснения по ЕПД</small></span>
+          <span class="stack-plus">+</span>
+        </button>
+        <div class="stacked-content">
+          <details>
+            <summary>Почему начислили по среднему или нормативу?</summary>
+            <p>Показания не были переданы с 20 по 25 число. Передайте фактические показания в следующем периоде — сумма будет скорректирована.</p>
+          </details>
+          <details>
+            <summary>Почему появились пени?</summary>
+            <p>Оплата не поступила до 15 числа месяца, следующего за расчётным.</p>
+          </details>
+          <details>
+            <summary>Почему долг остался, если я оплатил текущий месяц?</summary>
+            <p>Платёж мог закрыть только один месяц, а задолженность могла образоваться в предыдущем периоде. В блоке «Как образовалась задолженность» видно, в каком месяце появилась недоплата.</p>
+          </details>
+          <details>
+            <summary>Что делать при ограничении услуги?</summary>
+            <p>Необходимо погасить задолженность. После поступления оплаты предоставление услуги будет восстановлено.</p>
+          </details>
+        </div>
+      </section>
     </section>
   </main>
 
