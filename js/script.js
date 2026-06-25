@@ -910,7 +910,7 @@ function renderHeroServices(services) {
     const financeTiles = [
       { label: 'Долг на начало', value: service.debtStart || '0 ₽', section: 'debtStack', target: '' },
       { label: 'Начисление', value: service.charge || service.amount || '0 ₽', section: 'servicesStack', target: `service-${serviceKey}` },
-      { label: 'Оплата', value: service.paid || '0 ₽', section: 'paymentStack', target: `payment-current-${serviceKey}` },
+      { label: 'Оплата', value: service.paid || '0 ₽', section: 'paymentStack', target: '' },
       { label: 'Долг на конец', value: service.debtEnd || '0 ₽', section: 'timelineStack', target: 'timeline-payment' }
     ];
 
