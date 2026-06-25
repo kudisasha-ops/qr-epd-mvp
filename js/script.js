@@ -345,36 +345,27 @@ function getProblemReadingHistoryItems(client, year = CURRENT_HISTORY_YEAR) {
 function getProblemPaymentHistoryItems(client, year = CURRENT_HISTORY_YEAR) {
   const items = getHistoryItems(client, year);
   if (year !== CURRENT_HISTORY_YEAR) return items;
-  const firstProblemIndex = items.findIndex(item => isPaymentIssueItem(item));
-  return firstProblemIndex >= 0 ? items.slice(firstProblemIndex) : items.slice(-1);
+  const filtered = items.filter(item => isPaymentIssueItem(item));
+  return filtered.length ? filtered : items.slice(-1);
 }
 
 function syncHistorySectionForOpen(sectionId, targetId = '') {
   if (!activeClient) return;
 
   if (sectionId === 'readingStack') {
-    if (targetId) {
-      renderReadingHistory(activeClient, CURRENT_HISTORY_YEAR, false, { openLatest: true });
-    } else {
-      renderReadingHistory(activeClient, CURRENT_HISTORY_YEAR, true, {
-        visibleItems: getProblemReadingHistoryItems(activeClient, CURRENT_HISTORY_YEAR),
-        openAllRendered: true
-      });
-    }
+    renderReadingHistory(activeClient, CURRENT_HISTORY_YEAR, !targetId, {
+      visibleItems: getProblemReadingHistoryItems(activeClient, CURRENT_HISTORY_YEAR),
+      openLatest: false,
+      openAllRendered: false
+    });
   }
 
   if (sectionId === 'paymentStack') {
-    if (targetId) {
-      renderPaymentHistory(activeClient, CURRENT_HISTORY_YEAR, false, {
-        visibleItems: getProblemPaymentHistoryItems(activeClient, CURRENT_HISTORY_YEAR),
-        openAllRendered: true
-      });
-    } else {
-      renderPaymentHistory(activeClient, CURRENT_HISTORY_YEAR, true, {
-        visibleItems: getProblemPaymentHistoryItems(activeClient, CURRENT_HISTORY_YEAR),
-        openAllRendered: true
-      });
-    }
+    renderPaymentHistory(activeClient, CURRENT_HISTORY_YEAR, !targetId, {
+      visibleItems: getProblemPaymentHistoryItems(activeClient, CURRENT_HISTORY_YEAR),
+      openLatest: false,
+      openAllRendered: false
+    });
   }
 }
 
