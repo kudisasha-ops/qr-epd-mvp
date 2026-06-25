@@ -4830,3 +4830,49 @@ html {
     top: 0 !important;
   }
 }
+
+
+/* v73: normal text style under "Сейчас важно" */
+.important-main strong,
+#heroAction,
+#heroAction .hero-action-main,
+#heroAction .restriction-risk-link {
+  text-transform: none !important;
+  letter-spacing: normal !important;
+}
+
+#heroAction,
+#heroAction .hero-action-main {
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  line-height: 1.35 !important;
+}
+
+#heroAction .hero-action-main--debt {
+  font-weight: 400 !important;
+}
+
+#heroAction .restriction-risk-link {
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  line-height: 1.35 !important;
+}
+
+
+/* v74: small hint under current EPD services title */
+.hero-services-panel-title {
+  display: block !important;
+}
+
+.hero-services-panel-title span {
+  display: block;
+}
+
+.hero-services-panel-title small {
+  display: block;
+  margin-top: 3px;
+  font-size: 10.5px;
+  line-height: 1.25;
+  font-weight: 400;
+  color: #6c83a3;
+}
