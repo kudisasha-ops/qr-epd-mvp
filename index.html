@@ -18,28 +18,26 @@
     </section>
 
     <header class="hero hero-dashboard">
-      <div class="brand-row">
+      <div class="hero-topline">
         <img class="brand-logo-full" src="images/rosatom-logo-white-full.png" alt="Росатом Энергосбыт" />
-      </div>
-      <div class="hero-title-row">
-        <div>
+        <div class="hero-heading-group">
           <h1>Так понятнее</h1>
           <p>Ваша квитанция простым языком</p>
         </div>
         <div id="account" class="account">Загрузка...</div>
       </div>
 
-      <div class="first-screen-grid">
-        <div class="summary-card">
-          <span>К оплате</span>
+      <div id="firstScreenGrid" class="first-screen-grid">
+        <div id="amountCard" class="summary-card clickable-card" role="button" tabindex="0" aria-label="Перейти к оплате">
+          <span id="amountLabel">Начислено</span>
           <strong id="amount">-</strong>
         </div>
-        <div class="summary-card">
-          <span>Задолженность</span>
+        <div id="debtCard" class="summary-card clickable-card" role="button" tabindex="0" aria-label="Показать, как образовалась задолженность">
+          <span id="debtLabel">Задолженность</span>
           <strong id="debt">-</strong>
         </div>
-        <div class="summary-card">
-          <span>Пени</span>
+        <div id="penaltyCard" class="summary-card clickable-card" role="button" tabindex="0" aria-label="Показать пени и задолженность">
+          <span id="penaltyLabel">Пени</span>
           <strong id="penalty">-</strong>
         </div>
       </div>
@@ -50,15 +48,15 @@
           <strong id="heroAction">Загрузка...</strong>
         </div>
         <div class="important-details">
-          <div>
+          <div id="heroStageTile" class="clickable-info" role="button" tabindex="0" aria-label="Открыть блок Как устроен месяц">
             <span>Этап</span>
             <b id="heroStage">Загрузка...</b>
           </div>
-          <div>
+          <div id="heroReadingTile" class="clickable-info" role="button" tabindex="0" aria-label="Открыть историю передачи показаний">
             <span>Показания</span>
             <b id="heroReading">Загрузка...</b>
           </div>
-          <div>
+          <div id="heroPaymentTile" class="clickable-info" role="button" tabindex="0" aria-label="Открыть историю оплаты">
             <span>Оплата</span>
             <b id="heroPayment">Загрузка...</b>
           </div>
@@ -73,7 +71,7 @@
     </header>
 
     <section class="section-stack" aria-label="Подробности квитанции">
-      <section class="stacked-section" data-stack>
+      <section id="monthStack" class="stacked-section" data-stack>
         <button class="stacked-header" type="button">
           <span class="stack-number">1</span>
           <span class="stack-title"><strong>Как устроен месяц</strong><small>этапы: показания, квитанция, оплата</small></span>
@@ -109,7 +107,7 @@
         </div>
       </section>
 
-      <section class="stacked-section debt-section" data-stack>
+      <section id="debtStack" class="stacked-section debt-section" data-stack>
         <button class="stacked-header" type="button">
           <span class="stack-number">2</span>
           <span class="stack-title"><strong id="debtSectionTitle">Как образовалась задолженность</strong><small>по месяцам: начислено, оплачено, осталось</small></span>
@@ -121,7 +119,7 @@
         </div>
       </section>
 
-      <section class="stacked-section history-section" data-stack>
+      <section id="readingStack" class="stacked-section history-section" data-stack>
         <button class="stacked-header" type="button">
           <span class="stack-number">3</span>
           <span class="stack-title"><strong>История передачи показаний</strong><small>когда, каким способом и на какой месяц учтены</small></span>
@@ -134,7 +132,7 @@
         </div>
       </section>
 
-      <section class="stacked-section history-section" data-stack>
+      <section id="paymentStack" class="stacked-section history-section" data-stack>
         <button class="stacked-header" type="button">
           <span class="stack-number">4</span>
           <span class="stack-title"><strong>История оплаты</strong><small>когда, сколько и за какой месяц учтено</small></span>
@@ -156,7 +154,7 @@
         <div class="stacked-content" id="restrictionBlock"></div>
       </section>
 
-      <section class="stacked-section services-section" data-stack>
+      <section id="servicesStack" class="stacked-section services-section" data-stack>
         <button class="stacked-header" type="button">
           <span class="stack-number">5</span>
           <span class="stack-title"><strong>Что входит в ЕПД</strong><small>услуги, начисления, объём и тариф</small></span>
