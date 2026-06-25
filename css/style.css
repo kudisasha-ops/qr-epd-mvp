@@ -4795,3 +4795,38 @@ html {
 #heroAction .restriction-risk-link:visited {
   color: #c52828 !important;
 }
+
+
+/* v69: sticky header for the opened lower block while scrolling */
+.section-stack > .stacked-section.is-open,
+.stacked-section.is-open {
+  overflow: visible !important;
+}
+
+.stacked-section.is-open > .stacked-header,
+.faq-block.stacked-section.is-open > .stacked-header {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 80 !important;
+  box-shadow: 0 8px 18px rgba(12, 77, 162, 0.16) !important;
+}
+
+.stacked-section.is-open.stack-status-good > .stacked-header {
+  background: linear-gradient(180deg, #eff9f3 0%, #e6f4ec 100%) !important;
+}
+
+.stacked-section.is-open.stack-status-warn > .stacked-header {
+  background: linear-gradient(180deg, #fff8e7 0%, #fff1cf 100%) !important;
+}
+
+.stacked-section.is-open.stack-status-bad > .stacked-header,
+.stacked-section.is-open > .stacked-header.danger-header {
+  background: linear-gradient(180deg, #fff0f0 0%, #ffe2e2 100%) !important;
+}
+
+@media (max-width: 640px) {
+  .stacked-section.is-open > .stacked-header,
+  .faq-block.stacked-section.is-open > .stacked-header {
+    top: 0 !important;
+  }
+}
