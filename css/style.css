@@ -4714,3 +4714,84 @@ html {
     font-size: 14px !important;
   }
 }
+
+
+/* v66: important text without underline + separate restriction risk link */
+.hero-action-link {
+  text-decoration: none !important;
+  text-underline-offset: 0 !important;
+}
+
+.hero-action-main {
+  display: block;
+  text-decoration: none;
+}
+
+.restriction-risk-link {
+  display: block;
+  margin-top: 7px;
+  color: #c52828;
+  font-weight: 850;
+  line-height: 1.25;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.restriction-risk-link:hover,
+.restriction-risk-link:focus-visible {
+  color: #a01616;
+  text-decoration: none;
+}
+
+.restriction-risk-link:focus-visible {
+  outline: 2px solid rgba(197, 40, 40, 0.22);
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+
+
+/* v67: important block color states and stronger end debt */
+.hero-action-main {
+  display: block;
+  text-decoration: none !important;
+}
+
+.hero-action-main--ok {
+  color: #1353a2;
+}
+
+.hero-action-main--debt {
+  color: #d5a100;
+  font-weight: 800;
+}
+
+.hero-action-main--reading-link {
+  cursor: pointer;
+}
+
+.hero-action-main[role="button"] {
+  cursor: pointer;
+}
+
+.hero-action-main[role="button"]:focus-visible {
+  outline: 2px solid rgba(19, 83, 162, 0.22);
+  outline-offset: 4px;
+  border-radius: 8px;
+}
+
+.restriction-risk-link {
+  color: #c52828 !important;
+}
+
+.hero-service-finance b.warning-value {
+  color: #cf1f1f !important;
+  font-weight: 900 !important;
+}
+
+
+/* v68: stronger red restriction text */
+#heroAction .restriction-risk-link,
+#heroAction .restriction-risk-link:link,
+#heroAction .restriction-risk-link:visited {
+  color: #c52828 !important;
+}

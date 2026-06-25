@@ -208,25 +208,34 @@ function renderHeroSummary(client) {
     heroAction.removeAttribute('tabindex');
     heroAction.removeAttribute('aria-label');
 
-    if (client.restriction && client.restriction.active) {
-      const service = client.restriction.serviceLabel || client.restriction.service || "услуга";
-      heroAction.textContent = `Есть риск ограничения: ${service}. Проверьте задолженность и оплатите.`;
-    } else if (hasDebt || hasPenalty) {
-      heroAction.textContent = `Есть задолженность ${client.debt}${hasPenalty ? ` и пени ${client.penalty}` : ""}. Посмотрите, как она образовалась.`;
+    const hasActiveRestriction = !!(client.restriction && client.restriction.active);
+    const restrictionService = hasActiveRestriction
+      ? (client.restriction.serviceLabel || client.restriction.service || "услуга")
+      : "";
+    let mainText = "";
+    let mainClass = "hero-action-main hero-action-main--ok";
+    let mainAttrs = "";
+
+    if (hasDebt || hasPenalty) {
+      mainText = `Есть задолженность ${client.debt}${hasPenalty ? ` и пени ${client.penalty}` : ""}. Посмотрите, как она образовалась.`;
+      mainClass = "hero-action-main hero-action-main--debt";
+      mainAttrs = 'id="heroActionMainLink" role="button" tabindex="0" data-open-section="debtStack"';
     } else if (latest.readingMethod === "показания не передавались") {
-      heroAction.textContent = "Показания не переданы. Проверьте начисление и передайте фактические данные.";
+      mainText = "Показания не переданы. Проверьте начисление и передайте фактические данные.";
+      mainClass = "hero-action-main hero-action-main--ok";
     } else if (hasLateReadingsForNextBill) {
-      heroAction.textContent = "Показания переданы после срока. Текущий ЕПД рассчитан по среднему, а показания войдут в следующую квитанцию.";
+      mainText = "Показания переданы после срока. Текущий ЕПД рассчитан по среднему, а показания войдут в следующую квитанцию.";
+      mainClass = "hero-action-main hero-action-main--ok hero-action-main--reading-link";
+      mainAttrs = 'id="heroActionMainLink" role="button" tabindex="0" data-open-section="readingStack"';
     } else {
-      heroAction.textContent = "Задолженности нет. Всё в порядке.";
+      mainText = "Задолженности нет. Всё в порядке.";
+      mainClass = "hero-action-main hero-action-main--ok";
     }
 
-    if (hasDebt) {
-      heroAction.classList.add('hero-action-link');
-      heroAction.setAttribute('role', 'button');
-      heroAction.setAttribute('tabindex', '0');
-      heroAction.setAttribute('aria-label', 'Открыть блок Как образовалась задолженность');
-    }
+    heroAction.innerHTML = `
+      <span ${mainAttrs} class="${mainClass}">${mainText}</span>
+      ${hasActiveRestriction ? `<span id="restrictionRiskLink" class="restriction-risk-link" role="button" tabindex="0">Риск ограничения: ${restrictionService}. Открыть блок «Ограничение услуги»</span>` : ""}
+    `;
   }
 
   if (heroPayButton) {
@@ -356,7 +365,10 @@ function syncHistorySectionForOpen(sectionId, targetId = '') {
 
   if (sectionId === 'paymentStack') {
     if (targetId) {
-      renderPaymentHistory(activeClient, CURRENT_HISTORY_YEAR, false, { openLatest: true });
+      renderPaymentHistory(activeClient, CURRENT_HISTORY_YEAR, false, {
+        visibleItems: getProblemPaymentHistoryItems(activeClient, CURRENT_HISTORY_YEAR),
+        openAllRendered: true
+      });
     } else {
       renderPaymentHistory(activeClient, CURRENT_HISTORY_YEAR, true, {
         visibleItems: getProblemPaymentHistoryItems(activeClient, CURRENT_HISTORY_YEAR),
@@ -1505,9 +1517,36 @@ function makeClickable(elementId, handler) {
 }
 
 function setupHeroNavigation(client) {
-  if (parseMoney(getTotalDebt(client)) > 0) {
-    makeClickable("heroAction", () => {
-      openStackSection("debtStack");
+  const heroActionMainLink = document.getElementById("heroActionMainLink");
+  if (heroActionMainLink && heroActionMainLink.dataset.clickBound !== "true") {
+    heroActionMainLink.dataset.clickBound = "true";
+    const openMain = event => {
+      event.preventDefault();
+      const section = heroActionMainLink.dataset.openSection;
+      const target = heroActionMainLink.dataset.openTarget || '';
+      if (section) openStackSection(section, target);
+    };
+    heroActionMainLink.addEventListener("click", openMain);
+    heroActionMainLink.addEventListener("keydown", event => {
+      if (event.key === "Enter" || event.key === " ") {
+        openMain(event);
+      }
+    });
+  }
+
+  const restrictionRiskLink = document.getElementById("restrictionRiskLink");
+  if (restrictionRiskLink && restrictionRiskLink.dataset.clickBound !== "true") {
+    restrictionRiskLink.dataset.clickBound = "true";
+    const openRestriction = event => {
+      event.preventDefault();
+      event.stopPropagation();
+      openStackSection("restrictionStack");
+    };
+    restrictionRiskLink.addEventListener("click", openRestriction);
+    restrictionRiskLink.addEventListener("keydown", event => {
+      if (event.key === "Enter" || event.key === " ") {
+        openRestriction(event);
+      }
     });
   }
 
